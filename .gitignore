@@ -1,0 +1,25 @@
+# Python cache and build artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.pytest_cache/
+.mypy_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+
+# Generated plots from this project
+*_qcodes.html
+*.html
+
+# Local environment files
+.env
+.env.*
