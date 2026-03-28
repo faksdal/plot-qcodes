@@ -352,7 +352,7 @@ def build_percentage_figure(    df      : pd.DataFrame,
 def output_name_for(input_path: Path) -> Path:
     """
     Generate an output HTML filename based on the input CSV filename.
-    E.g. "qcodes_Ny_2010_2026.csv" -> "qcodes_Ny_2010_2026_qcodes.html"
+    E.g. "qcodes_Ny_2010_2026.csv" -> "qcodes_Ny_2010_2026_plot.html"
     """
 
     #return input_path.with_name(f"{input_path.stem}_qcodes.html")
@@ -492,7 +492,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         type=Path,
         help=(
             "Output HTML path (only valid when one input file resolves). "
-            "Defaults to input filename with '_qcodes.html' suffix."
+            "Defaults to input filename with '_plot.html' suffix."
         ),
     )
     parser.add_argument("--title", help="Custom plot title")
