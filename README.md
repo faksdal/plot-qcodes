@@ -19,63 +19,89 @@ It is robust to CSV files that contain only a subset of these columns: missing Q
 1. Create and activate a virtual environment (optional but recommended).
 2. Install dependencies:
 
+	```bash
 	pip install -r requirements.txt
+	```
 
 ## Usage
 
 Run on a single CSV file:
 
+```bash
 python plot-qcodes.py qcodes_Nn_2010_2026.csv
+```
 
 Run on all CSV files in the current directory:
 
+```bash
 python plot-qcodes.py
+```
 
 Open generated plot(s) automatically in your default browser:
 
+```bash
 python plot-qcodes.py qcodes_Nn_2010_2026.csv --open
+```
 
 Batch mode with browser open:
 
+```bash
 python plot-qcodes.py --open
+```
 
 Custom output file name (single input only):
 
+```bash
 python plot-qcodes.py qcodes_Nn_2010_2026.csv --output my_plot.html
+```
 
 Custom chart title:
 
+```bash
 python plot-qcodes.py qcodes_Nn_2010_2026.csv --title "NYALES20 Qcodes"
+```
 
 Select a subset of qcodes:
 
+```bash
 python plot-qcodes.py qcodes_Nn_2010_2026.csv --qcodes 0123456789GH
+```
 
 Filter by session types (first two characters after `-` in session name):
 
+```bash
 python plot-qcodes.py qcodes_Nn_2010_2026.csv --stypes vo,r1,r4
+```
 
 Filter by date range (inclusive, YYYYMMDD):
 
+```bash
 python plot-qcodes.py qcodes_Nn_2010_2026.csv --date-range 20230101,20231231
+```
 
 Combine filters:
 
+```bash
 python plot-qcodes.py qcodes_Nn_2010_2026.csv --stypes vo,r1 --date-range 20230101,20231231 --qcodes 0123456789GH --open
+```
 
 Skip sessions where all relevant qcodes are zero:
 
+```bash
 python plot-qcodes.py qcodes_Nn_2010_2026.csv --qcodes 0123456789GH --skip-empty
+```
 
 You can also pass glob patterns, for example:
 
+```bash
 python plot-qcodes.py "*Sband*.CSV"
+```
 
 ## Output
 
 By default, each input CSV generates one HTML file named:
 
-<input_stem>_qcodes.html
+`<input_stem>_qcodes.html`
 
 Each plot is an interactive Plotly chart with:
 
