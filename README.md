@@ -25,31 +25,47 @@ It is robust to CSV files that contain only a subset of these columns: missing Q
 
 Run on a single CSV file:
 
-python plot_qcodes.py qcodes_Nn_2010_2026.csv
+python plot-qcodes.py qcodes_Nn_2010_2026.csv
 
 Run on all CSV files in the current directory:
 
-python plot_qcodes.py
+python plot-qcodes.py
 
 Open generated plot(s) automatically in your default browser:
 
-python plot_qcodes.py qcodes_Nn_2010_2026.csv --open
+python plot-qcodes.py qcodes_Nn_2010_2026.csv --open
 
 Batch mode with browser open:
 
-python plot_qcodes.py --open
+python plot-qcodes.py --open
 
 Custom output file name (single input only):
 
-python plot_qcodes.py qcodes_Nn_2010_2026.csv --output my_plot.html
+python plot-qcodes.py qcodes_Nn_2010_2026.csv --output my_plot.html
 
 Custom chart title:
 
-python plot_qcodes.py qcodes_Nn_2010_2026.csv --title "NYALES20 Qcodes"
+python plot-qcodes.py qcodes_Nn_2010_2026.csv --title "NYALES20 Qcodes"
+
+Select a subset of qcodes:
+
+python plot-qcodes.py qcodes_Nn_2010_2026.csv --qcodes 0123456789GH
+
+Filter by session types (first two characters after `-` in session name):
+
+python plot-qcodes.py qcodes_Nn_2010_2026.csv --stypes vo,r1,r4
+
+Filter by date range (inclusive, YYYYMMDD):
+
+python plot-qcodes.py qcodes_Nn_2010_2026.csv --date-range 20230101,20231231
+
+Combine filters:
+
+python plot-qcodes.py qcodes_Nn_2010_2026.csv --stypes vo,r1 --date-range 20230101,20231231 --qcodes 0123456789GH --open
 
 You can also pass glob patterns, for example:
 
-python plot_qcodes.py "*Sband*.CSV"
+python plot-qcodes.py "*Sband*.CSV"
 
 ## Output
 
@@ -61,9 +77,11 @@ Each plot is an interactive Plotly chart with:
 
 - Stacked bars in percent (0 to 100)
 - Unified hover by session
-- Hover details with raw count, total scans, and percent
+- Hover details with qcode and percent
 
 ## Notes
 
 - Rows where all Qcode counts are zero are kept; percentages are shown as 0.
 - If VgosDB is not present, the first CSV column is used for the x-axis labels.
+- `--stypes` uses the first two characters after `-` in each session name.
+- `--date-range` uses the first eight characters of each session name as `YYYYMMDD`.
