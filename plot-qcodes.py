@@ -355,7 +355,8 @@ def output_name_for(input_path: Path) -> Path:
     E.g. "qcodes_Ny_2010_2026.csv" -> "qcodes_Ny_2010_2026_qcodes.html"
     """
 
-    return input_path.with_name(f"{input_path.stem}_qcodes.html")
+    #return input_path.with_name(f"{input_path.stem}_qcodes.html")
+    return input_path.with_name(f"{input_path.stem}_plot.html")
 # ——— END OF output_name_for() —————————————————————————————————————————————————
 
 
@@ -565,15 +566,14 @@ def main(argv: Iterable[str] | None = None) -> int:
         output_path = args.output if args.output is not None else output_name_for(input_path)
         
         # Generate the plot and save as HTML.
-        plot_csv(
-            input_path,
-            output_path,
-            title=args.title,
-            qcodes=selected_qcodes,
-            stypes=selected_stypes,
-            date_range=selected_date_range,
-            skip_empty=args.skip_empty,
-        )
+        plot_csv(input_path,
+                 output_path,
+                 title      = args.title,
+                 qcodes     = selected_qcodes,
+                 stypes     = selected_stypes,
+                 date_range = selected_date_range,
+                 skip_empty = args.skip_empty,
+                )
         
         # Open the generated HTML file if requested
         if args.open:
