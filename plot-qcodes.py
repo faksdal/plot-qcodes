@@ -254,6 +254,16 @@ def find_session_column(df: pd.DataFrame) -> str:
 
 
 
+# ——— active_qcodes_for_selection() ——————————————————————————————————————————
+def active_qcodes_for_selection(qcodes: list[str] | None = None) -> list[str]:
+    """Return qcodes in plotting stack order for the current selection."""
+
+    selected_qcodes = qcodes if qcodes is not None else ALL_QCODES
+    return [q for q in QCODE_STACK_BOTTOM_TO_TOP if q in selected_qcodes]
+# ——— END OF active_qcodes_for_selection() ———————————————————————————————————
+
+
+
 # ——— build_percentage_figure() ————————————————————————————————————————————————
 def build_percentage_figure(    df      : pd.DataFrame,
                                 title   : str,
@@ -271,8 +281,7 @@ def build_percentage_figure(    df      : pd.DataFrame,
 
     # Determine which qcodes to include based on the provided list or default
     # to all, then reorder for plotting so stack layers are deterministic.
-    selected_qcodes = qcodes if qcodes is not None else ALL_QCODES
-    active_qcodes   = [q for q in QCODE_STACK_BOTTOM_TO_TOP if q in selected_qcodes]
+    active_qcodes   = active_qcodes_for_selection(qcodes)
     qcode_cols      = [f"Total_{q}" for q in active_qcodes]
 
     # Ensure every requested qcode is present; missing columns count as 0.
@@ -391,7 +400,8 @@ def plot_csv(   input_path  : Path,
                 title       : str | None = None,
                 qcodes      : list[str] | None = None,
                 stypes      : list[str] | None = None,
-                date_range  : tuple[date, date] | None = None
+                date_range  : tuple[date, date] | None = None,
+                skip_empty  : bool = False
             ) -> None:
     """
     Read the CSV file, build the percentage figure, and save as HTML.
@@ -411,6 +421,17 @@ def plot_csv(   input_path  : Path,
     # This will reduce the DataFrame to only the rows that have session names
     # starting with a date within the specified range
     df = filter_by_date_range(df, date_range=date_range)
+
+    # If requested, omit sessions where all relevant qcode counts are zero.
+    if skip_empty:
+        qcode_cols = [f"Total_{q}" for q in active_qcodes_for_selection(qcodes)]
+        for col in qcode_cols:
+            if col not in df.columns:
+                df[col] = 0
+        non_empty_mask = (
+            df[qcode_cols].apply(pd.to_numeric, errors="coerce").fillna(0).sum(axis=1) > 0
+        )
+        df = df.loc[non_empty_mask].copy()
 
     if df.empty:
         raise SystemExit(
@@ -507,6 +528,11 @@ def main(argv: Iterable[str] | None = None) -> int:
         action="store_true",
         help="Open generated HTML file(s) in the default browser",
     )
+    parser.add_argument(
+        "--skip-empty",
+        action="store_true",
+        help="Omit sessions where all relevant qcode counts are zero",
+    )
     args = parser.parse_args(list(argv) if argv is not None else None)
 
     # Expand input paths, handle defaults and deduplication.
@@ -546,6 +572,7 @@ def main(argv: Iterable[str] | None = None) -> int:
             qcodes=selected_qcodes,
             stypes=selected_stypes,
             date_range=selected_date_range,
+            skip_empty=args.skip_empty,
         )
         
         # Open the generated HTML file if requested

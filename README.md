@@ -63,6 +63,10 @@ Combine filters:
 
 python plot-qcodes.py qcodes_Nn_2010_2026.csv --stypes vo,r1 --date-range 20230101,20231231 --qcodes 0123456789GH --open
 
+Skip sessions where all relevant qcodes are zero:
+
+python plot-qcodes.py qcodes_Nn_2010_2026.csv --qcodes 0123456789GH --skip-empty
+
 You can also pass glob patterns, for example:
 
 python plot-qcodes.py "*Sband*.CSV"
