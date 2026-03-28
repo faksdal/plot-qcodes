@@ -337,11 +337,11 @@ def build_percentage_figure(    df      : pd.DataFrame,
         title       = title,
         barmode     = "relative",
         hovermode   = "x unified",
-        xaxis       = dict(title="Session", tickangle=45),
+        xaxis       = dict(title="Session, date", tickangle=37),
         yaxis       = dict(title="Qcode share of total (%)", range=[0, 100]),
         
         # Settings for the plot legend
-        legend = dict(title=dict(text="Q-codes"), traceorder="reversed",),
+        legend = dict(title=dict(text="Q-codes"), traceorder="reversed"),
     )
     return fig
 # ——— END OF build_percentage_figure() —————————————————————————————————————————
