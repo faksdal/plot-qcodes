@@ -1,3 +1,4 @@
+#! /home/jole/plot-qcodes/.venv/bin/python
 
 # ——— File info ————————————————————————————————————————————————————————————————
 # Filename      : plot-qcodes.py
@@ -29,18 +30,21 @@ import plotly.graph_objects as go   # To build the figure
 from datetime   import date
 from pathlib    import Path
 from typing     import Iterable
-
 # ——— END OF import section ————————————————————————————————————————————————————
 
 
 
 # ——— Constants ————————————————————————————————————————————————————————————————
-ALL_QCODES = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "B", "D", "E", "F", "G", "H", "N", "-"]
+ALL_QCODES = ["0", "1", "2", "3", "4", "5",
+              "6", "7", "8", "9", "B", "D",
+              "E", "F", "G", "H", "N", "-"]
 _VALID_QCODE_SET = set(ALL_QCODES)
 
 # Stack order for positive bars from bottom to top.
 # This yields top-to-bottom: 9,8,7,6,5,4,3,2,1,0,G,H, and so on for that subset.
-QCODE_STACK_BOTTOM_TO_TOP = ["-", "N", "F", "E", "D", "B", "G", "H", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+QCODE_STACK_BOTTOM_TO_TOP = ["-", "N", "F", "E", "D", "B",
+                             "G", "H", "0", "1", "2", "3",
+                             "4", "5", "6", "7", "8", "9"]
 
 # Fixed qcode palette so colors remain stable across files and selections.
 QCODE_COLORS = {
@@ -70,16 +74,17 @@ QCODE_COLORS = {
 # ——— parse_qcodes() ———————————————————————————————————————————————————————————
 def parse_qcodes(raw: str) -> list[str]:
     """
-    Parse a compact qcode string like '0123BD-' into an ordered list.
+    Parse a compact qcode string like '0123BD-' given by the user as command
+    line argument, into an ordered list.
     """
 
     # Validate characters and preserve order without duplicates.
     seen    : set[str]  = set()
     result  : list[str] = []
 
-    # Parse the input string, validate against allowed qcodes, and build a list
+    # Parse the input string, validate against allowed qcodes, and build a set
     # of unique codes.
-    # The qcodes are case-insensitive, but we will store them in uppercase form.
+    # The qcodes are case-insensitive, we'll store them in uppercase form.
     for ch in raw.upper():
         if ch not in _VALID_QCODE_SET:
             raise SystemExit(
@@ -107,6 +112,7 @@ def parse_session_types(raw: str) -> list[str]:
     """
 
     parsed = [item.strip().lower() for item in raw.split(",") if item.strip()]
+    # parsed = [item.strip().upper() for item in raw.split(",") if item.strip()]
     if not parsed:
         raise SystemExit("--stypes string produced an empty list.")
 
